@@ -154,6 +154,7 @@ public class State {
         int mate = 0;
         if(checkmate())
             mate = 99999;
+        
         if(!ai)
             return -1 * (result + loc + mate);
         return (result + loc + mate);

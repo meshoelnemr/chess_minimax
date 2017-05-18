@@ -22,12 +22,12 @@ public class Game {
     }
     
     public void start(){
+        // Start with the normal board position
+        color = GUI.self().new_game() * 6;
+        
         // Initial state
         state = new State(color == CONSTANTS.BLACK);
         selected = false;
-        
-        // Start with the normal board position
-        color = GUI.self().new_game() * 6;
         
         if(color == CONSTANTS.BLACK){
             GUI.self().set_inverted(true);
