@@ -171,10 +171,15 @@ public class State {
             return -1 * (result + loc + mate);
         return (result + loc + mate);
     }
-    public void nuke(){
-        Move m = minimax(3, new int[]{Integer.MIN_VALUE}, new int[]{Integer.MAX_VALUE});
+    public void nuke(int difficulty){
+        long start = System.currentTimeMillis();
+        Move m = minimax(difficulty, new int[]{Integer.MIN_VALUE}, new int[]{Integer.MAX_VALUE});
         if(m != null)
             move(m);
+        long end = System.currentTimeMillis();
+        
+        System.err.println((double)(end - start) / 1000 + " seconds");
+        
     }
     
     public Move minimax(int depth, int[] alpha, int[] beta){

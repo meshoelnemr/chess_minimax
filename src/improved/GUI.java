@@ -74,6 +74,32 @@ public class GUI extends JFrame{
             });
         menus[1].add(invert);
         
+        JMenuItem[] difficulty = new JMenuItem[]{
+            new JMenuItem("Easy"),
+            new JMenuItem("Medium"),
+            new JMenuItem("Hard"),
+        };
+        for(JMenuItem m : difficulty){
+            m.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JMenuItem j = (JMenuItem)e.getSource();
+                    switch(j.getText()){
+                        case "Easy":
+                            Game.self().set_difficulty(1);
+                            break;
+                        case "Medium":
+                            Game.self().set_difficulty(3);
+                            break;
+                        case "Hard":
+                            Game.self().set_difficulty(5);
+                            break;
+                    }
+                }
+            });
+            menus[1].add(m);
+        }
+        
         
         for(JMenu m : menus)
             menu_bar.add(m);

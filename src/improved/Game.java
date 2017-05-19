@@ -2,6 +2,7 @@ package improved;
 
 import improved.Chess.*;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 public class Game {
     // singleton
@@ -17,6 +18,12 @@ public class Game {
     
     private int color;
     private State state;
+    private boolean running;
+    private int difficulty = 3; // 2 - easy   3 - medium   4 - hard
+    
+    public void set_difficulty(int i){
+        difficulty = i;
+    }
     
     private Game(){
     }
@@ -31,10 +38,11 @@ public class Game {
         
         if(color == CONSTANTS.BLACK){
             GUI.self().set_inverted(true);
-            state.nuke();
+            state.nuke(difficulty);
         } else
             GUI.self().set_inverted(false);
         
+        running = true;
         draw();
     }
     public void draw(){
@@ -44,13 +52,14 @@ public class Game {
         if(!p.in_board())
             return;
         
-        if(selected){
+        if(selected && running){
             // Commit move
             if(piece != null && moves != null){
                 Move move = Move.has(moves, p);
                 if(move != null){
                     state.move(move);
-                    state.nuke();
+                    GUI.self().highlight(null);
+                    state.nuke(difficulty);
                 }
             }
             GUI.self().highlight(null);
