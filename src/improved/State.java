@@ -93,6 +93,18 @@ public class State {
                 }catch(NullPointerException e){}
         return false;
     }
+    public boolean castle_marked(Position pos){
+        int color = turn ? CONSTANTS.WHITE : CONSTANTS.BLACK;
+        for(int i = 0; i < 8 ; i++)
+            for(int j = 0; j < 8; j++)
+                try{
+                    Piece p = all[i][j];
+                    if (p.color != color && Move.has(p.moves(this), pos) != null){
+                        return true;
+                    }
+                }catch(NullPointerException e){}
+        return false;
+    }
     public boolean checkmate(){
         int color = turn ? CONSTANTS.WHITE : CONSTANTS.BLACK;
         
@@ -160,7 +172,7 @@ public class State {
         return (result + loc + mate);
     }
     public void nuke(){
-        Move m = minimax(3);
+        Move m = minimax(2);
         if(m != null)
             move(m);
     }

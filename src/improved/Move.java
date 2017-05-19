@@ -16,24 +16,31 @@ public class Move {
         from_pos = new Position[]{pos1.copy()};
         to_pos = new Position[]{pos2.copy()};
 
-        from = new Piece[]{p_copy(state.get_piece(pos1))};
-        to   = new Piece[]{p_copy(state.get_piece(pos2))};
+        from = new Piece[]{state.get_piece(pos1)};
+        to   = new Piece[]{state.get_piece(pos2)};
 
         type = 0;
     }
     
-    public Move(Piece p1, Piece p2, int type){
+    public Move(Position pos1, Position pos2, Position pos3, Position pos4, State state){
+        from_pos = new Position[]{pos1.copy(), pos3.copy()};
+        to_pos = new Position[]{pos2.copy(), pos4.copy()};
+
+        from = new Piece[]{state.get_piece(pos1), state.get_piece(pos3)};
+        to   = new Piece[]{state.get_piece(pos2), state.get_piece(pos4)};
         
+        this.type = 0;
     }
     
     
     // Perform move
     public void make(State state){
         for(int i = 0; i < from_pos.length ; i++){
-            Piece p1 = state.get_piece(from_pos[i]);
+            Piece p1 = state.get_piece(from_pos[i]).copy();
             
             state.set_piece(p1, to_pos[i]);
             p1.set_position(to_pos[i]);
+            p1.moved = true;
             
             state.set_piece(null, from_pos[i]);
         }

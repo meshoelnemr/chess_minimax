@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public abstract class Piece {
-    public boolean moved = false;
+    public boolean moved;
     public final int color;
     public final int type;
     private final Position position;
@@ -15,12 +15,14 @@ public abstract class Piece {
         this.type  = type;
         
         this.position = new Position(x, y);
+        moved = false;
     }
     public Piece(int color, int type, Position p){
         this.color = color;
         this.type = type;
         
         this.position = p;
+        moved = false;
     }
     
     // Position shit
