@@ -173,7 +173,7 @@ public class State {
     }
     public void nuke(int difficulty){
         long start = System.currentTimeMillis();
-        Move m = minimax(difficulty, new int[]{Integer.MIN_VALUE}, new int[]{Integer.MAX_VALUE});
+        Move m = minimax(difficulty);
         if(m != null)
             move(m);
         long end = System.currentTimeMillis();
@@ -182,11 +182,13 @@ public class State {
         
     }
     
-    public Move minimax(int depth, int[] alpha, int[] beta){
+    public Move minimax(int depth){
         int color = turn ? CONSTANTS.WHITE : CONSTANTS.BLACK;
         
         Move best = null;
         int rating = Integer.MIN_VALUE;
+        int alpha = Integer.MIN_VALUE;
+        int beta = Integer.MAX_VALUE;
         
         for(int i = 0; i < 8 ; i++)
             for(int j = 0; j < 8; j++)
@@ -201,17 +203,19 @@ public class State {
                                 best = m;
                             }
                             undo();
+                            
+                            // prune
+                            alpha = Math.max(alpha, rating);
+                            if(alpha >= beta)
+                                break;
                         }
                     }
                 }catch(NullPointerException e){}
         return best;
     }
-    public int min(int depth, int[] alpha, int[] beta){
+    public int min(int depth, int alpha, int beta){
         int color = turn ? CONSTANTS.WHITE : CONSTANTS.BLACK;
         int rating = Integer.MAX_VALUE;
-        
-        int a = alpha[0];
-        int b = beta[0];
         
         if(depth < 1 || checkmate())
             return evaluate();
@@ -228,21 +232,17 @@ public class State {
                             undo();
                             
                             // prune
-                            if(rating <= a)
+                            beta = Math.min(beta, rating);
+                            if(alpha >= beta)
                                 break;
-                            b = Math.min(b, rating);
                         }
                     }
                 }catch(NullPointerException e){}
-        alpha[0] = b;
         return rating;
     }
-    public int max(int depth, int[] alpha, int[] beta){
+    public int max(int depth, int alpha, int beta){
         int color = turn ? CONSTANTS.WHITE : CONSTANTS.BLACK;
         int rating = Integer.MIN_VALUE;
-        
-        int a = alpha[0];
-        int b = beta[0];
         
         if(depth < 1 || checkmate())
             return evaluate();
@@ -259,13 +259,12 @@ public class State {
                             undo();
                             
                             // prune
-                            if(rating >= b)
+                            alpha = Math.max(alpha, rating);
+                            if(alpha >= beta)
                                 break;
-                            a = Math.max(a, rating);
                         }
                     }
                 }catch(NullPointerException e){}
-        beta[0] = a;
         return rating;
     }
     

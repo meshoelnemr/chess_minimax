@@ -49,17 +49,21 @@ public class Game {
         GUI.self().draw_state(state);
     }
     public void pew(Position p){
-        if(!p.in_board())
+        if(!running || !p.in_board())
             return;
         
-        if(selected && running){
+        if(selected){
             // Commit move
             if(piece != null && moves != null){
                 Move move = Move.has(moves, p);
                 if(move != null){
                     state.move(move);
-                    GUI.self().highlight(null);
                     state.nuke(difficulty);
+                    
+                    if(state.checkmate()){
+                        JOptionPane.showMessageDialog(null, "Checkmate");
+                        running = false;
+                    }
                 }
             }
             GUI.self().highlight(null);
