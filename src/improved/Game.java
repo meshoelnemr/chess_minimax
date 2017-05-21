@@ -59,9 +59,12 @@ public class Game {
                 if(move != null){
                     state.move(move);
                     state.nuke(difficulty);
+                    GUI.self().highlight(null);
                     
-                    if(state.checkmate()){
-                        JOptionPane.showMessageDialog(null, "Checkmate");
+                    if(state.stalemate()){
+                        if(state.in_check())
+                            JOptionPane.showMessageDialog(null, "Checkmate");
+                        JOptionPane.showMessageDialog(null, "Stalemate");
                         running = false;
                     }
                 }

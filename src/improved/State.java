@@ -106,10 +106,13 @@ public class State {
         return false;
     }
     public boolean checkmate(){
-        int color = turn ? CONSTANTS.WHITE : CONSTANTS.BLACK;
-        
         if(!in_check())
             return false;
+        
+        return stalemate();
+    }
+    public boolean stalemate(){
+        int color = turn ? CONSTANTS.WHITE : CONSTANTS.BLACK;
         
         for(int i = 0; i < 8 ; i++)
             for(int j = 0; j < 8; j++)
