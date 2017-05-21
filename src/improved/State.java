@@ -220,7 +220,10 @@ public class State {
         int color = turn ? CONSTANTS.WHITE : CONSTANTS.BLACK;
         int rating = Integer.MAX_VALUE;
         
-        if(depth < 1 || checkmate())
+        // terminal state flag
+        boolean terminal = true;
+        
+        if(depth < 1)
             return evaluate();
         
         for(int i = 0; i < 8 ; i++)
@@ -228,7 +231,10 @@ public class State {
                 try{
                     Piece p = get_piece(i, j);
                     if(p.color == color){
-                        for(Move m : p.checked_moves(this)){
+                        ArrayList<Move> moves = p.checked_moves(this);
+                        if(!moves.isEmpty())
+                            terminal = false;
+                        for(Move m : moves){
                             // rate move
                             move(m);
                             rating = Math.min(rating, max(depth - 1, alpha, beta));
@@ -241,13 +247,18 @@ public class State {
                         }
                     }
                 }catch(NullPointerException e){}
+        if(terminal)
+            return evaluate();
         return rating;
     }
     public int max(int depth, int alpha, int beta){
         int color = turn ? CONSTANTS.WHITE : CONSTANTS.BLACK;
         int rating = Integer.MIN_VALUE;
         
-        if(depth < 1 || checkmate())
+        // terminal state flag
+        boolean terminal = true;
+        
+        if(depth < 1)
             return evaluate();
         
         for(int i = 0; i < 8 ; i++)
@@ -255,7 +266,10 @@ public class State {
                 try{
                     Piece p = get_piece(i, j);
                     if(p.color == color){
-                        for(Move m : p.checked_moves(this)){
+                        ArrayList<Move> moves = p.checked_moves(this);
+                        if(!moves.isEmpty())
+                            terminal = false;
+                        for(Move m : moves){
                             // rate move
                             move(m);
                             rating = Math.max(rating, min(depth - 1, alpha, beta));
@@ -268,6 +282,8 @@ public class State {
                         }
                     }
                 }catch(NullPointerException e){}
+        if(terminal)
+            return evaluate();
         return rating;
     }
     

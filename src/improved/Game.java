@@ -57,6 +57,8 @@ public class Game {
             if(piece != null && moves != null){
                 Move move = Move.has(moves, p);
                 if(move != null){
+                    if(move.promotion != null)
+                        move = get_promotion_type(moves);
                     state.move(move);
                     state.nuke(difficulty);
                     GUI.self().highlight(null);
@@ -64,7 +66,8 @@ public class Game {
                     if(state.stalemate()){
                         if(state.in_check())
                             JOptionPane.showMessageDialog(null, "Checkmate");
-                        JOptionPane.showMessageDialog(null, "Stalemate");
+                        else
+                            JOptionPane.showMessageDialog(null, "Stalemate");
                         running = false;
                     }
                 }
@@ -85,5 +88,34 @@ public class Game {
                 }
             }catch(NullPointerException e){}
         }
+    }
+    
+    private Move get_promotion_type(ArrayList<Move> moves){
+        Move move;
+        int option = JOptionPane.showOptionDialog(null,
+                               "Promote pawn",
+                               "Choose type",
+                               JOptionPane.YES_NO_OPTION,
+                               JOptionPane.INFORMATION_MESSAGE,
+                               null,
+                               new String[]{"Queen","Rook","Bishop","Knight"},
+                               "Queen");
+        switch(option){
+            case 1:
+                move = Move.promotion_type(moves, CONSTANTS.ROOK);
+                break;
+            case 2:
+                move = Move.promotion_type(moves, CONSTANTS.BISHOP);
+                break;
+            case 3:
+                move = Move.promotion_type(moves, CONSTANTS.KNIGHT);
+                break;
+            case 0:
+            default:
+                move = Move.promotion_type(moves, CONSTANTS.QUEEN);
+                break;
+        }
+        
+        return move;
     }
 }

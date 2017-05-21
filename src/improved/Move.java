@@ -10,7 +10,7 @@ public class Move {
     public Position[] from_pos;
     public Position[] to_pos;
     
-    public int type;
+    public Piece promotion;
     
     public Move(Position pos1, Position pos2, State state){
         from_pos = new Position[]{pos1.copy()};
@@ -19,7 +19,7 @@ public class Move {
         from = new Piece[]{state.get_piece(pos1)};
         to   = new Piece[]{state.get_piece(pos2)};
 
-        type = 0;
+        promotion = null;
     }
     
     public Move(Position pos1, Position pos2, Position pos3, Position pos4, State state){
@@ -29,20 +29,40 @@ public class Move {
         from = new Piece[]{state.get_piece(pos1), state.get_piece(pos3)};
         to   = new Piece[]{state.get_piece(pos2), state.get_piece(pos4)};
         
-        this.type = 0;
+        promotion = null;
+    }
+    
+    public Move(Position pos1, Position pos2, Piece piece, State state){
+        from_pos = new Position[]{pos1.copy()};
+        to_pos = new Position[]{pos2.copy()};
+
+        from = new Piece[]{state.get_piece(pos1)};
+        to   = new Piece[]{state.get_piece(pos2)};
+        
+        promotion = piece;
     }
     
     
     // Perform move
     public void make(State state){
-        for(int i = 0; i < from_pos.length ; i++){
-            Piece p1 = state.get_piece(from_pos[i]).copy();
-            
-            state.set_piece(p1, to_pos[i]);
-            p1.set_position(to_pos[i]);
+        if(promotion == null)
+            for(int i = 0; i < from_pos.length ; i++){
+                Piece p1 = state.get_piece(from_pos[i]).copy();
+
+                state.set_piece(p1, to_pos[i]);
+                p1.set_position(to_pos[i]);
+                p1.moved = true;
+
+                state.set_piece(null, from_pos[i]);
+            }
+        else{
+            Piece p1 = promotion;
+
+            state.set_piece(p1, to_pos[0]);
+            p1.set_position(to_pos[0]);
             p1.moved = true;
-            
-            state.set_piece(null, from_pos[i]);
+
+            state.set_piece(null, from_pos[0]);
         }
         state.change_turn();
     }
@@ -63,15 +83,16 @@ public class Move {
         state.change_turn();
     }
     
-    private Piece p_copy(Piece p){
-        if(p != null)
-            return p.copy();
-        return null;
-    }
-    
     public static Move has(ArrayList<Move> moves, Position p){
         for(Move m : moves)
             if(p.equals(m.to_pos[0]))
+                return m;
+        return null;
+    }
+    
+    public static Move promotion_type(ArrayList<Move> moves, int type){
+        for(Move m : moves)
+            if(m.promotion.type == type)
                 return m;
         return null;
     }
