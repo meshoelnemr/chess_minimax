@@ -1,8 +1,10 @@
 package improved;
 
 import improved.Chess.*;
+import java.io.*;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
+import java.util.stream.Stream;
+import javax.swing.*;
 
 public class Game {
     // singleton
@@ -117,5 +119,81 @@ public class Game {
         }
         
         return move;
+    }
+    
+    public void save(){
+        JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new File("."));
+        
+        int ret = chooser.showSaveDialog(null);
+        if(ret == JFileChooser.APPROVE_OPTION){
+            try{
+                BufferedWriter bw = new BufferedWriter(new FileWriter(chooser.getSelectedFile()));
+                for(int i = 0; i < 8 ; i++)
+                    for(int j = 0; j < 8; j++)
+                        try{
+                            Piece p = state.get_piece(7 - j, i);
+                            String t = String.valueOf(p.type);
+                            String c = String.valueOf(p.color);
+                            bw.write(t+c+i+j+"\n");
+                        }catch(NullPointerException e){}
+                
+                bw.close();
+            }catch(IOException e){}
+        }
+    }
+    public void load(){
+        JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new File("."));
+        
+        int ret = chooser.showOpenDialog(null);
+        if(ret == JFileChooser.APPROVE_OPTION){
+            try{
+                BufferedReader br = new BufferedReader(new FileReader(chooser.getSelectedFile()));
+                State s = new State();
+                while(br.ready()){
+                    String line = br.readLine();
+                    int t = Integer.valueOf(line.substring(0, 1));
+                    int c = Integer.valueOf(line.substring(1, 2));
+                    int i = Integer.valueOf(line.substring(2, 3));
+                    int j = Integer.valueOf(line.substring(3, 4));
+                    
+                    Piece p;
+                    switch(t){
+                        case CONSTANTS.KING:
+                            p = new King(c, 7 - j, i);
+                            break;
+                        case CONSTANTS.QUEEN:
+                            p = new Queen(c, 7 - j, i);
+                            break;
+                        case CONSTANTS.ROOK:
+                            p = new Rook(c, 7 - j, i);
+                            break;
+                        case CONSTANTS.BISHOP:
+                            p = new Bishop(c, 7 - j, i);
+                            break;
+                        case CONSTANTS.KNIGHT:
+                            p = new Knight(c, 7 - j, i);
+                            break;
+                        case CONSTANTS.PAWN:
+                            p = new Pawn(c, 7 - j, i);
+                            break;
+                        default:
+                            p = null;
+                            break;
+                    }
+                    
+                    s.set_piece(p, 7 - j, i);
+                }
+                br.close();
+                
+                state = s;
+                color = CONSTANTS.WHITE;
+                GUI.self().draw_state(state);
+                running = true;
+            }catch(IOException e){
+                System.err.println(e.getMessage());
+            }
+        }
     }
 }

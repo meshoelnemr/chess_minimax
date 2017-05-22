@@ -74,6 +74,11 @@ public class State {
         ai = type;
     }
     
+    public State(){
+        // White plays
+        ai = false;
+    }
+    
     // Check and checkmate
     public boolean in_check(){
         if(turn)
@@ -170,9 +175,10 @@ public class State {
         if(checkmate())
             mate = 99999;
         
-        if(!ai)
-            return -1 * (result + loc + mate);
-        return (result + loc + mate);
+        if(ai)// black ai
+            return result + loc + mate;
+        // white ai
+        return -1 * (result + loc) + mate;
     }
     public void nuke(int difficulty){
         long start = System.currentTimeMillis();

@@ -47,6 +47,8 @@ public class GUI extends JFrame{
         // File
         JMenuItem[] file = new JMenuItem[]{
             new JMenuItem("Play"),
+            new JMenuItem("Save"),
+            new JMenuItem("Load"),
             new JMenuItem("Exit"),
         };
         file[0].addActionListener(new ActionListener() {
@@ -59,10 +61,24 @@ public class GUI extends JFrame{
         file[1].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.exit(0);
+                Game.self().save();
             }
         });
         menus[0].add(file[1]);
+        file[2].addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Game.self().load();
+            }
+        });
+        menus[0].add(file[2]);
+        file[3].addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        menus[0].add(file[3]);
         
         // Options
         JMenuItem invert = new JMenuItem("Invert");
