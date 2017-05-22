@@ -37,7 +37,7 @@ public class King extends Piece {
         
         // Castle moves
         // Hasn't moved and not in check
-        if(!castle_stop && !moved){
+        if(!castle_stop && !moved && current.x == 4){
             castle_stop = true;
             Position rook_k = new Position(current.x + 3, current.y);
             Position pad1 = new Position(current.x + 1, current.y);
