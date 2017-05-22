@@ -108,7 +108,7 @@ public class GUI extends JFrame{
                             Game.self().set_difficulty(3);
                             break;
                         case "Hard":
-                            Game.self().set_difficulty(5);
+                            Game.self().set_difficulty(4);
                             break;
                     }
                 }
