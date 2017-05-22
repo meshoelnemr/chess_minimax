@@ -5,7 +5,7 @@ import java.util.*;
 
 public class State {
     private boolean ai;
-    private boolean turn = true;
+    public boolean turn = true;
     public void change_turn(){
         turn = !turn;
     }
@@ -45,6 +45,10 @@ public class State {
         return all[pos.x][pos.y];
     }
     public State(boolean type){
+        ai = type;
+    }
+    
+    public void init_default(){
         all[0][0] = new Rook(CONSTANTS.WHITE,     0, 0);
         all[1][0] = new Knight(CONSTANTS.WHITE,   1, 0);
         all[2][0] = new Bishop(CONSTANTS.WHITE,   2, 0);
@@ -70,13 +74,6 @@ public class State {
             all[i][1] = new Pawn(CONSTANTS.WHITE, i, 1);
             all[i][6] = new Pawn(CONSTANTS.BLACK, i, 6);
         }
-        
-        ai = type;
-    }
-    
-    public State(){
-        // White plays
-        ai = false;
     }
     
     // Check and checkmate

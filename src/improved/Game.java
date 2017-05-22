@@ -3,7 +3,6 @@ package improved;
 import improved.Chess.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.stream.Stream;
 import javax.swing.*;
 
 public class Game {
@@ -37,6 +36,7 @@ public class Game {
         // Initial state
         state = new State(color == CONSTANTS.BLACK);
         selected = false;
+        state.init_default();
         
         if(color == CONSTANTS.BLACK){
             GUI.self().set_inverted(true);
@@ -122,6 +122,8 @@ public class Game {
     }
     
     public void save(){
+        if(state == null)
+            return;
         JFileChooser chooser = new JFileChooser();
         chooser.setCurrentDirectory(new File("."));
         
@@ -129,6 +131,7 @@ public class Game {
         if(ret == JFileChooser.APPROVE_OPTION){
             try{
                 BufferedWriter bw = new BufferedWriter(new FileWriter(chooser.getSelectedFile()));
+                bw.write(color == CONSTANTS.WHITE ? "white\n" : "black\n");
                 for(int i = 0; i < 8 ; i++)
                     for(int j = 0; j < 8; j++)
                         try{
@@ -150,7 +153,21 @@ public class Game {
         if(ret == JFileChooser.APPROVE_OPTION){
             try{
                 BufferedReader br = new BufferedReader(new FileReader(chooser.getSelectedFile()));
-                State s = new State();
+
+                String COLOR = br.readLine();
+                if(COLOR.startsWith("white")){
+                    color = CONSTANTS.WHITE;
+                    state = new State(false);
+                    state.turn = true;
+                    GUI.self().set_inverted(false);
+                }
+                else{
+                    color = CONSTANTS.BLACK;
+                    state = new State(true);
+                    state.turn = false;
+                    GUI.self().set_inverted(true);
+                }
+                
                 while(br.ready()){
                     String line = br.readLine();
                     int t = Integer.valueOf(line.substring(0, 1));
@@ -183,12 +200,10 @@ public class Game {
                             break;
                     }
                     
-                    s.set_piece(p, 7 - j, i);
+                    state.set_piece(p, 7 - j, i);
                 }
                 br.close();
                 
-                state = s;
-                color = CONSTANTS.WHITE;
                 GUI.self().draw_state(state);
                 running = true;
             }catch(IOException e){
