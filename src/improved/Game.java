@@ -21,7 +21,7 @@ public class Game {
     private int color;
     private State state;
     private boolean running;
-    private int difficulty = 3; // 2 - easy   3 - medium   4 - hard
+    private int difficulty = 3; // 1 - easy   3 - medium   5 - hard
     
     public void set_difficulty(int i){
         difficulty = i;

@@ -173,7 +173,7 @@ public class State {
         
         int mate = 0;
         if(checkmate())
-            mate = 99999;
+            mate = (ai == turn) ? -999999 : 999999;
         
         if(ai)// black ai
             return result + loc + mate;
@@ -253,8 +253,11 @@ public class State {
                         }
                     }
                 }catch(NullPointerException e){}
-        if(terminal)
+        if(terminal){
+//            System.err.println("Min " + (ai == turn));
+//            System.err.println("Min " + evaluate());
             return evaluate();
+        }
         return rating;
     }
     public int max(int depth, int alpha, int beta){
@@ -288,8 +291,11 @@ public class State {
                         }
                     }
                 }catch(NullPointerException e){}
-        if(terminal)
+        if(terminal){
+//            System.err.println("Max " + (ai == turn));
+//            System.err.println("Max " + evaluate());
             return evaluate();
+        }
         return rating;
     }
     
